@@ -23,6 +23,7 @@ clLeft.mode='COL-REFLECT'
 
 # Function follow the line.
 def FollowLine():
+
     while True:
         mLeft.run_forever(speed_sp=350)
         mRight.run_forever(speed_sp=350)
@@ -42,14 +43,6 @@ def BackWard():
     while True:
         mLeft.run_forever(speed_sp=-250)
         mRight.run_forever(speed_sp=-250)
-
-        if clLeft.value() < 40:
-            mLeft.run_forever(speed_sp=-50)
-            mRight.run_forever(speed_sp=-250)
-
-        if clRight.value() < 40:
-            mLeft.run_forever(speed_sp=-250)
-            mRight.run_forever(speed_sp=-50)
         
         if clLeft.value() < 40 and clRight.value() < 40:
             break
@@ -58,6 +51,7 @@ def TurnRight():
     while True:
         mLeft.run_forever(speed_sp=350)
         mRight.run_forever(speed_sp=-100)
+
         if clLeft.value() < 40 and clRight.value() < 40:
             mLeft.run_forever(speed_sp=350)
             mRight.run_forever(speed_sp=-100)
@@ -90,7 +84,6 @@ def GoOverFoward():
         mLeft.run_forever(speed_sp=250)
         mRight.run_forever(speed_sp=250)
 
-
         if clLeft.value() < 40 and clRight.value() < 40:
             mLeft.run_forever(speed_sp=250)
             mRight.run_forever(speed_sp=250)
@@ -111,21 +104,36 @@ def GoOverBackward():
             break
 
 
+Commands = ['f','f','f','f','l','f','f','f','b','b','b']
 
-FollowLine()
-GoOverFoward()
-FollowLine()
-GoOverBackward()            
-BackWard()
-GoOverBackward()
-BackWard()
-GoOverFoward()
-FollowLine()
-GoOverFoward()
-FollowLine()
-GoOverBackward()
-BackWard()
-TurnRight()
+def move(commands)
+    for i in range(commands):
+        if(commands[i] == 'f'):
+            if commands[i+1] == 'f':
+                FollowLine()
+                GoOverFoward()
+                
+            else   
+                FollowLine()
+                
+
+        if(commands[i] == 'b'):
+            if(commands[i+1] == 'b'):
+                BackWard()
+                GoOverBackward()
+                
+            else
+                BackWard()
+                
+        if(commands[i] == 'r'):
+            TurnRight()
+            
+        if(commands[i] == 'l'):
+            TurnLeft()
+             
+
+move(Commands)
+
 
 
 # Turn off the motor and apply the brake
