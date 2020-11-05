@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 class Solver:
     PATH = '.'
@@ -10,23 +11,43 @@ class Solver:
     def __init__(self):
         self.sm = []
 
+    def children(self, pos):
+        children = []
+        (x,y) = pos
+        if (self.map[x-1,y] != self.WALL):
+            children.append((x-1,y))
+        if (self.map[x,y-1] != self.WALL):
+            children.append((x,y-1))
+        if (self.map[x+1,y] != self.WALL):
+            children.append((x+1,y))
+        if (self.map[x,y+1] != self.WALL):
+            children.append((x,y+1))
+        return children
 
-    def DFS(self, maps, goals):
+    def DFS(self, maps):
         # loop through map and find initial position
-        startPosition = np.where(maps == 'M')
-        self.player = startPosition
+        startPosition = np.where(maps == self.START)
+        self.car = startPosition
         OpenSet = []
         ClosedSet = []
-        MAXNODES = 2000000
+
         OpenSet.append(startPosition)
 
         while(OpenSet):
-            currentState = OpenSet.pop()
-            if (currentState == (2,1)):
-                return "YES"
+            Node = OpenSet.pop(0)
+            distGoal = []
+            if (Node == self.GOAL):
+                print(ClosedSet)
             else:
-                if(maps[currentState[0]-1,currentState[1]] == 'X'):
-                    OpenSet.append(maps[currentState[0]-1,currentState[1]])
+                
+                children_nodes = children(Node)
+                ClosedSet.append(Node)
+                for child in children_nodes:
+                    if(child not in ClosedSet):
+                        dist = heuristic(child)
+                        distGoal.append(dist)
+                index = distGoal.index(min(distGoal))
+                OpenSet.insert(0,children_nodes[index])
 
 
     def get_map(self):
@@ -39,7 +60,15 @@ class Solver:
             add = np.array(list(data[i+2]))
             maps = np.vstack((maps, add))
         self.map = maps
+        self.GOAL = np.where(maps == self.GOAL)
 
+    def heuristic(self, child):
+        dist = math.sqrt(pow(child[0]-self.GOAL[0],2)+pow(child[1]-self.GOAL[1],2))
+        return dist
+
+    def A_Star(self):
+        
+        print("færdig")
 
     def get_locations(self, maps):
         goals = []
@@ -59,20 +88,6 @@ class Solver:
             return True
         else: 
             return False
-
-    def children(self, pos):
-        children = []
-        (x,y) = pos
-        if (self.map[x-1,y] != self.WALL):
-            children.append((x-1,y))
-        if (self.map[x,y-1] != self.WALL):
-            children.append((x,y-1))
-        if (self.map[x+1,y] != self.WALL):
-            children.append((x+1,y))
-        if (self.map[x,y+1] != self.WALL):
-            children.append((x,y+1))
-        return children
-    
 
     def BFS(self): 
   
