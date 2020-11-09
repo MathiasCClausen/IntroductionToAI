@@ -24,6 +24,10 @@ class Solver:
             children.append((x,y+1))
         return children
 
+    def heuristic(self, child):
+        dist = math.sqrt(pow(child[0]-self.GOAL[0],2)+pow(child[1]-self.GOAL[1],2))
+        return dist
+        
     def DFS(self, maps):
         # loop through map and find initial position
         startPosition = np.where(maps == self.START)
@@ -39,13 +43,17 @@ class Solver:
             if (Node == self.GOAL):
                 print(ClosedSet)
             else:
-                
+                    #Children nodes to the current position.
                 children_nodes = children(Node)
+                    #Adds the Current position to the closed set. 
                 ClosedSet.append(Node)
+
                 for child in children_nodes:
                     if(child not in ClosedSet):
+                            #Checks the vallid childrens dist to goal. 
                         dist = heuristic(child)
                         distGoal.append(dist)
+                    #Finds the node that are closest to goal and adds it to OpenSet.
                 index = distGoal.index(min(distGoal))
                 OpenSet.insert(0,children_nodes[index])
 
@@ -62,9 +70,7 @@ class Solver:
         self.map = maps
         self.GOAL = np.where(maps == self.GOAL)
 
-    def heuristic(self, child):
-        dist = math.sqrt(pow(child[0]-self.GOAL[0],2)+pow(child[1]-self.GOAL[1],2))
-        return dist
+    
 
     def A_Star(self):
         
