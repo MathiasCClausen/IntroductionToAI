@@ -24,30 +24,31 @@ class Solver:
             children.append((x,y+1))
         return children
 
-    def DFS(self, maps):
+    def DFS(self):
         # loop through map and find initial position
-        startPosition = np.where(maps == self.START)
-        self.car = startPosition
+        GoalPos = (1,2)
         OpenSet = []
         ClosedSet = []
 
-        OpenSet.append(startPosition)
+        OpenSet.append(self.startPosition)
 
         while(OpenSet):
             Node = OpenSet.pop(0)
             distGoal = []
-            if (Node == self.GOAL):
-                print(ClosedSet)
-            else:
-                
-                children_nodes = children(Node)
+            if (Node == GoalPos):
                 ClosedSet.append(Node)
-                for child in children_nodes:
-                    if(child not in ClosedSet):
-                        dist = heuristic(child)
-                        distGoal.append(dist)
+                self.nextPath = ClosedSet
+            else:      
+                children_nodes = self.children(Node)
+                ClosedSet.append(Node)
+                for i in children_nodes:
+                    if i in ClosedSet:
+                        children_nodes.remove(i)
+                for i in range(len(children_nodes)):
+                    dist = self.heuristic(children_nodes[i], GoalPos)
+                    distGoal.append(dist)
                 index = distGoal.index(min(distGoal))
-                OpenSet.insert(0,children_nodes[index])
+                OpenSet.insert(-1,children_nodes[index])   # if -1 then BFS
 
 
     def get_map(self):
@@ -60,11 +61,36 @@ class Solver:
             add = np.array(list(data[i+2]))
             maps = np.vstack((maps, add))
         self.map = maps
-        self.GOAL = np.where(maps == self.GOAL)
+        self.GOALS = np.where(self.map == self.GOAL)
+        self.startPosition = np.where(self.map == self.START)
+        self.currentPos = self.startPosition
 
-    def heuristic(self, child):
-        dist = math.sqrt(pow(child[0]-self.GOAL[0],2)+pow(child[1]-self.GOAL[1],2))
+
+    def heuristic(self, child, GoalPos):
+        dist = math.sqrt(pow(child[0]-GoalPos[0],2)+pow(child[1]-GoalPos[1],2))
         return dist
+
+    def get_path(self):
+        path = []
+        for i in range(len(self.nextPath)-1):
+            pos = self.nextPath[i]
+            newpos = self.nextPath[i+1]
+            if(pos[0] > newpos[0]):
+                path.append('f')
+            if(pos[0] < newpos[0]):
+                path.append('b')
+            if(pos[1] > newpos[1]):
+                path.append('l')
+            if(pos[1] < newpos[1]):
+                path.append('r')
+        self.path = path
+        return path
+
+def print_path(self):
+    for i in range(len(self.nextPath)-1):
+        pos = self.nextPath[i]
+        self.map[pos] = 'o'
+        print(self.map)
 
     def A_Star(self):
         
