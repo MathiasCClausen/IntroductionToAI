@@ -2,7 +2,7 @@ Map (X: walls; .: paths; G: goal positions of cans; M: initial position of robot
 XXXXXXXXXXXX
 XX...X.....X
 XX...X.GG..X
-XXJJJ.XGGXXX
+XXJXXXXGGXXX
 X.J....MXXXX
 X...X...XXXX
 XXXXXXXXXXXX

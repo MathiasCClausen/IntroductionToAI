@@ -42,16 +42,17 @@ def heuristic(child, GoalPos):
 def DFS(maps):
     # loop through map and find initial position
     startPosition = np.where(maps == START)
-    GoalPos = (1,10)
+    GoalPos = (1,2)
     OpenSet = []
     ClosedSet = []
 
     OpenSet.append(startPosition)
 
-    for i in range(10):
+    while(OpenSet):
         Node = OpenSet.pop(0)
         distGoal = []
         if (Node == GoalPos):
+            ClosedSet.append(Node)
             return ClosedSet
         else:      
             children_nodes = children(Node)
@@ -63,16 +64,19 @@ def DFS(maps):
                 dist = heuristic(children_nodes[i], GoalPos)
                 distGoal.append(dist)
             index = distGoal.index(min(distGoal))
-            OpenSet.insert(0,children_nodes[index])
+            OpenSet.insert(-1,children_nodes[index])   # if -1 then BFS
 
 maps = get_map()
-mål = (1,10)
+
+mål = (1,2)
 
 path = []
 
 nodes = DFS(maps)
+
 for i in range(len(nodes)-1):
     pos = nodes[i]
+    maps[pos] = 'o'
     newpos = nodes[i+1]
     if(pos[0] > newpos[0]):
         path.append('f')
@@ -83,7 +87,11 @@ for i in range(len(nodes)-1):
     if(pos[1] < newpos[1]):
         path.append('r')
 
+print(maps)
 print(path)
+
+
+
 #Sokoban.DFS(maps)
 
 
