@@ -18,6 +18,7 @@ mRight = LargeMotor('outC')
 # Sets the input lines
 clRight = ColorSensor('in3')
 clLeft = ColorSensor('in2')
+
 clRight.mode='COL-REFLECT'
 clLeft.mode='COL-REFLECT'
 
@@ -68,11 +69,12 @@ def BackWard():
         if clLeft.value() < 40 and clRight.value() < 40:
             break
 
+
 def TurnRight():
     while True:
     
-        mLeft.run_to_rel_pos(position_sp=180, speed_sp=400, stop_action="hold")
-        mRight.run_to_rel_pos(position_sp=-180, speed_sp=250, stop_action="hold")
+        mLeft.run_to_rel_pos(position_sp=240, speed_sp=400, stop_action="hold")
+        mRight.run_to_rel_pos(position_sp=-100, speed_sp=150, stop_action="hold")
         sleep(1)
         
         break
@@ -82,8 +84,8 @@ def TurnRight():
 def TurnLeft():
     
     while True:
-        mLeft.run_to_rel_pos(position_sp=-180, speed_sp=250, stop_action="hold")
-        mRight.run_to_rel_pos(position_sp=180, speed_sp=400, stop_action="hold")
+        mLeft.run_to_rel_pos(position_sp=-100, speed_sp=150, stop_action="hold")
+        mRight.run_to_rel_pos(position_sp=240, speed_sp=400, stop_action="hold")
         sleep(1)
         
         break
@@ -91,8 +93,8 @@ def TurnLeft():
 
 def TurnAround():
     while True:
-        mLeft.run_to_rel_pos(position_sp=380, speed_sp=350, stop_action="hold")
-        mRight.run_to_rel_pos(position_sp=-380, speed_sp=350, stop_action="hold")
+        mLeft.run_to_rel_pos(position_sp=340, speed_sp=350, stop_action="hold")
+        mRight.run_to_rel_pos(position_sp=-340, speed_sp=350, stop_action="hold")
         sleep(1)
         
         break
@@ -109,8 +111,9 @@ def GoOverFoward():
             mLeft.run_forever(speed_sp=350)
             mRight.run_forever(speed_sp=350)
 
-        if clLeft.value() > 40 and clRight.value() > 40:
+        if clLeft.value() > 40 or clRight.value() > 40:
             break
+
 
 def GoOverBackward(): 
     while True: 
@@ -121,42 +124,114 @@ def GoOverBackward():
             mLeft.run_forever(speed_sp=-350)
             mRight.run_forever(speed_sp=-350)
 
-        if clLeft.value() > 40 and clRight.value() > 40:
+        if clLeft.value() > 40 or clRight.value() > 40:
             break
 
 
 
-Commands = ['f','f','pf','b','r','f','l','f','l','f','f','p','b','a']
+# We have 4 directions, and initializes the "first" direction here. 
+direction = 'up'
+
+Commands = ['f','l','f','b','a','f','f','r']
 
 def move(commands):
     
     for i in range(len(commands)):
-        if(commands[i] == 'f'):
-            FollowLine() 
+            # The command up with the four different direction for the car.
+            # Under here is the movement up.
+        if(commands[i] == 'u' and direction == 'up'):
             GoOverFoward()
-                
+            FollowLine() 
+        
+        if(commands[i] == 'u' and direction == 'right'):
+            TurnLeft()
+            FollowLine() 
+            direction = 'up'
+        
+        if(commands[i] == 'u' and direction == 'left'):
+            TurnRight()
+            FollowLine() 
+            direction = 'up'
+        
+        if(commands[i] == 'u' and direction == 'down'):
+            TurnAround()
+            FollowLine() 
+            direction = 'up'
+
+
         if(commands[i] == 'pf'):   
             PushCan()
                 
                 
-
-        if(commands[i] == 'b'):
+            # For the command go down the map
+        
+        if(commands[i] == 'd' and direction == 'up'):
             mLeft.run_forever(speed_sp=0)
             mRight.run_forever(speed_sp=0)
-            
+                # SKAL TESTES!!
             GoOverBackward()
             sleep(1)
             BackWard()
-                
-                
-        if(commands[i] == 'r'):
-            TurnRight()
-            
-        if(commands[i] == 'l'):
-            TurnLeft()
-
-        if(commands[i] == 'a'):
             TurnAround()
+            direction = 'down'
+        
+        if(commands[i] == 'd' and direction == 'right')
+            TurnRight()
+            FollowLine()
+            direction = 'down'
+        
+        if(commands[i] == 'd' and direction == 'left')
+            TurnLeft()
+            FollowLine()
+            direction = 'down'
+        
+        if(commands[i] == 'd' and direction == 'down')
+            GoOverFoward()
+            FollowLine()
+
+
+            # For the commands go to the right in the map      
+        
+        if(commands[i] == 'r' and direction == 'up'):
+            TurnRight()
+            FollowLine()
+            direction = 'right'
+        
+        if(commands[i] == 'r' and direction == 'right'):
+            GoOverFoward()
+            FollowLine()
+
+        if(commands[i] == 'r' and direction == 'left'):
+            TurnAround()
+            FollowLine()
+            direction = 'right'
+        
+        if(commands[i] == 'r' and direction == 'down'):
+            TurnLeft()
+            FollowLine()
+            direction = 'right'
+
+            # For the commands go left in the map
+        if(commands[i] == 'l' and direction == 'up'):
+            TurnLeft()
+            FollowLine()
+            direction = 'left'
+        
+        if(commands[i] == 'l' and direction == 'right'):
+            TurnAround()
+            FollowLine()
+            direction = 'left'
+
+        if(commands[i] == 'l' and direction == 'left'):
+            GoOverFoward()
+            FollowLine()
+        
+        if(commands[i] == 'l' and direction == 'down'):
+            TurnRight()
+            FollowLine()
+            direction = 'left'
+
+        
              
 
 

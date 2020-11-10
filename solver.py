@@ -86,15 +86,13 @@ class Solver:
         self.path = path
         return path
 
-def print_path(self):
-    for i in range(len(self.nextPath)-1):
-        pos = self.nextPath[i]
-        self.map[pos] = 'o'
-        print(self.map)
+    def print_path(self):
+        for i in range(len(self.nextPath)-1):
+            pos = self.nextPath[i]
+            self.map[pos] = 'o'
+            print(self.map)
 
-    def A_Star(self):
-        
-        print("færdig")
+    
 
     def get_locations(self, maps):
         goals = []
